@@ -1,4 +1,4 @@
-package kr.ac.mju.cs.network.main;
+package sample;
 
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -43,7 +43,7 @@ public class MainClass extends Frame {
 			socket = serverSocket.accept();
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
-			System.out.println("�곌껐��);
+			System.out.println("연결됨");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
