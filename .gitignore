@@ -4,5 +4,5 @@ CU/.classpath
 CU/.project
 CU/build/
 CU/build/classes/
-.ignore
+.gitignore
 CU/bin/sample/
