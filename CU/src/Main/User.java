@@ -35,6 +35,4 @@ public class User {
 	public void setPermit(boolean permit) {
 		Permit = permit;
 	}
-
-
 }
