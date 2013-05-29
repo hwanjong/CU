@@ -6,3 +6,6 @@ CU/build/
 CU/build/classes/
 .gitignore
 CU/bin/sample/
+CUServer/.setting/
+CUServer/.classpath
+CUServer/.project
