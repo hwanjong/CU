@@ -9,7 +9,7 @@ public class MainFrame extends JFrame{
 	
 	public MainFrame(Client client){
 		setClient(client);
-		JoinPanel joinPanel = new JoinPanel();
+		JoinPanel joinPanel = new JoinPanel(client);
 		
 		this.add(joinPanel);
 		

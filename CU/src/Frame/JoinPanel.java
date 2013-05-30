@@ -6,15 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import Main.Client;
+
 public class JoinPanel extends JPanel implements ActionListener{
 
+	Client client;
 	JTextField txtName=new JTextField(20);
 	JTextField txtID=new JTextField(20);
 	JPasswordField txtPwd = new JPasswordField(20);
@@ -24,7 +26,8 @@ public class JoinPanel extends JPanel implements ActionListener{
 	JButton btnAdd = new JButton("가입하기");
 	JButton btnCancel = new JButton("다시쓰기");
 	
-	public JoinPanel (){
+	public JoinPanel (Client client){
+		this.client = client;
 		setLayout(new GridLayout(6,0));
 		
 		JPanel p00=new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -66,7 +69,7 @@ public class JoinPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		String sname=txtName.getText().trim();
+		String nicName=txtName.getText().trim();
 		String sID=txtID.getText().trim();
 		String sPwd=txtPwd.getText().trim();
 		String sPwd2=txtPwd02.getText().trim();
@@ -83,7 +86,7 @@ public class JoinPanel extends JPanel implements ActionListener{
 			return;
 		}
 		
-		if(sname.equals("")||sID.equals("")||sPwd.equals("")||sPwd2.equals("")){
+		if(nicName.equals("")||sID.equals("")||sPwd.equals("")||sPwd2.equals("")){
 			JOptionPane.showMessageDialog(null, "모든항목을채워주세요");
 			return;
 		}else if(sPwd.equals(sPwd2)==false){
@@ -94,6 +97,9 @@ public class JoinPanel extends JPanel implements ActionListener{
 		//ADD를 눌렸을때 동작
 		if(eventSource==btnAdd){
 			JOptionPane.showMessageDialog(null, "ADD버튼이 눌려졌음.");
+			String msg="";
+			msg+="5:"+sID+","+sPwd+","+nicName;
+			client.sendMassage(msg);
 			
 			
 		}

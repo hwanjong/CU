@@ -37,4 +37,16 @@ public class Client {
 		} catch (Exception e) {
 		}
 	}
+	
+	public void sendMassage(String massage){
+		try{
+		writer.println(massage);
+		writer.flush();
+		massage = reader.readLine();
+		System.out.println(massage);
+		}catch(Exception e){
+			System.out.println("메시지가 넘어오지않음");
+		
+		}
+	}
 }
