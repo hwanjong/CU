@@ -3,6 +3,7 @@ package Main;
 public class User {
 	
 	private String ID;
+	private String pwd;
 	private int roomNo;
 	private boolean Permit;
 	
@@ -34,5 +35,13 @@ public class User {
 
 	public void setPermit(boolean permit) {
 		Permit = permit;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
 	}
 }

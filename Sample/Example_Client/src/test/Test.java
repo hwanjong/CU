@@ -43,7 +43,7 @@ public class Test extends Frame implements MouseMotionListener {
 //		repaint();
 
 		try {
-			socket = new Socket("localhost", 10001);
+			socket = new Socket("192.168.39.201", 10005);
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 
