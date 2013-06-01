@@ -5,7 +5,13 @@ public class Room {
 	private String rMaster;
 	private int numUser;
 	private Vector<String> partUser = new Vector<String>();
-	private int play;
+	private String play;
+	private String level;
+	Game game = new Game(this);
+	public void gameStart(){
+		game.start();
+		play = "O";
+	}
 	public int getrNo() {
 		return rNo;
 	}
@@ -24,10 +30,10 @@ public class Room {
 	public void setPartUser(Vector<String> partUser) {
 		this.partUser = partUser;
 	}
-	public int getPlay() {
+	public String getPlay() {
 		return play;
 	}
-	public void setPlay(int play) {
+	public void setPlay(String play) {
 		this.play = play;
 	}
 	public int getNumUser() {
@@ -35,5 +41,11 @@ public class Room {
 	}
 	public void setNumUser(int numUser) {
 		this.numUser = numUser;
+	}
+	public String getLevel(){
+		return level;
+	}
+	public void setLevel(String level){
+		this.level = level;
 	}
 }
