@@ -1,13 +1,11 @@
+import java.util.Vector;
 
 public class Room {
-	int rNo;
-	String rMaster;
-	String[] partUser = new String[4];
-	int play;
-	ServerDbAdministrator dbAdmin = new ServerDbAdministrator();
-	public Room(String userId){
-		dbAdmin.CreateRoom(userId);
-	}
+	private int rNo;
+	private String rMaster;
+	private int numUser;
+	private Vector<String> partUser = new Vector<String>();
+	private int play;
 	public int getrNo() {
 		return rNo;
 	}
@@ -20,10 +18,10 @@ public class Room {
 	public void setrMaster(String rMaster) {
 		this.rMaster = rMaster;
 	}
-	public String[] getPartUser() {
+	public Vector<String> getPartUser() {
 		return partUser;
 	}
-	public void setPartUser(String[] partUser) {
+	public void setPartUser(Vector<String> partUser) {
 		this.partUser = partUser;
 	}
 	public int getPlay() {
@@ -32,5 +30,10 @@ public class Room {
 	public void setPlay(int play) {
 		this.play = play;
 	}
-	
+	public int getNumUser() {
+		return numUser;
+	}
+	public void setNumUser(int numUser) {
+		this.numUser = numUser;
+	}
 }

@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Vector;
 
 
 public class ServerDbAdministrator {
@@ -6,6 +7,7 @@ public class ServerDbAdministrator {
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
+	ResultSet rs1 = null;
 	String sql;
 	String url = "jdbc:mysql://localhost:3306/cu";
 	String id = "root";
@@ -15,7 +17,7 @@ public class ServerDbAdministrator {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(url,id,pwd);
 		}catch (Exception e) {
-			System.out.println("Db 생성자"+e.getStackTrace());
+			System.out.println("Database 연결에 실패했습니다.");
 		}
 	}
 	public String CreateUser(String id, String pwd, String nickName){
@@ -29,11 +31,11 @@ public class ServerDbAdministrator {
 			
 			return id;
 		}catch(Exception e){
-			System.out.println(e.getStackTrace());
+			System.out.println("Id 중복");
 			return null;
 		}
 	}
-	public boolean CheckLogin(String id,String pwd){
+	public String CheckLogin(String id,String pwd){
 		sql = "select * from users where id=? and pwd=?";
 		try{
 			pstmt = conn.prepareStatement(sql);
@@ -42,12 +44,12 @@ public class ServerDbAdministrator {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()){
-				return true;
+				return id;
 			}else{
-				return false;
+				return null;
 			}
 		}catch(Exception e){
-			return false;
+			return null;
 		}
 	}
 	public void CreateRoom(String id){
@@ -59,7 +61,39 @@ public class ServerDbAdministrator {
 			pstmt.executeQuery();
 		}catch(Exception e){}
 	}
-	public Room GetRoom(){
+	public Vector<Room> GetRoomList(){
 		Room room = new Room();
+		Vector<Room> rVector = new Vector<Room>();
+		sql = "select * from room";
+		try{
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				int rNo = rs.getInt("room_num");
+				String rMaster = rs.getString("room_master");
+				int isPlay = rs.getInt("play");
+				int numUsers = rs.getInt("current_users");
+				
+				room.setNumUser(numUsers);
+				room.setPlay(isPlay);
+				room.setrMaster(rMaster);
+				room.setrNo(rNo);
+				
+				sql = "select * from participate where room_num = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, rNo);
+				rs1 = pstmt.executeQuery();
+				
+				while(rs1.next()){
+					String userId = rs.getString("id");
+					room.getPartUser().add(userId);
+				}
+				rVector.add(room);
+			}
+		}catch(Exception e){
+			System.out.println("FailGetRoomList:"+e.getStackTrace());
+		}
+		return rVector;
 	}
 }

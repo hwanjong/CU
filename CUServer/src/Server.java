@@ -10,6 +10,7 @@ class Receiver extends Thread{
 	String msg;
 	int select;
 	String contents;
+	String userId;
 	ServerDbAdministrator dbAdmin;
 	public Receiver(Socket socket,Vector<Socket> sVector){
 		dbAdmin = new ServerDbAdministrator();
@@ -23,9 +24,7 @@ class Receiver extends Thread{
 				msg = reader.readLine();
 				System.out.println(msg);
 				select = Integer.parseInt(msg.split(":")[0]);
-				System.out.println(select);
 				contents = msg.split(":")[1];
-				System.out.println(contents);
 				if(select==1){
 					System.out.println(contents);
 					String id = contents.split(",")[0];
@@ -34,30 +33,33 @@ class Receiver extends Thread{
 					String nickName = contents.split(",")[2];
 					String userId = dbAdmin.CreateUser(id,pwd,nickName);
 					if(userId==null){
-						ToClient(socket,"Fail:중복된 ID가 존재 합니다.");
+						ToClient(socket,"Fail");
 					}else{
-						ToClient(socket,"Create:ID 생성 완료");
+						ToClient(socket,"Success");
 					}
 				}
 				
 				else if(select==2){
 					String id = contents.split(",")[0];
 					String pwd = contents.split(",")[1];
-					boolean isOk = dbAdmin.CheckLogin(id,pwd);
-					if(!isOk){
-						ToClient(socket,"Fail:로그인 실패");
+					userId = dbAdmin.CheckLogin(id,pwd);
+					if(userId==null){
+						ToClient(socket,"Fail");
 					}else{
-						ToClient(socket,"Login:로그인 완료");
-//						rVector = dbAdmin.getRoom();
+						ToClient(socket,"Login");
+						rVector = dbAdmin.GetRoomList();
 //						for(Room room : rVector){
-//							ToClient(socket,room);
+//							Vector<String> pUser = room.getPartUser();
+//							String msg = room.getrNo()+","+room.getrMaster()+","+room.getNumUser()+","+room.getPlay()+
+//									pUser;
+//							ToClient(socket,msg);
 //						}
 					}
 				}
 				else if(select==3){
 					ToAll(contents);
 				}else if(select==4){
-					
+					ToOtherClient(contents);
 				}else if(select==5){
 					
 				}else if(select==6){
@@ -67,8 +69,16 @@ class Receiver extends Thread{
 				}
 			}
 		}catch(Exception e){
-			System.out.println("Run");
-			System.out.println(e.getStackTrace());
+			if(userId == null){
+				System.out.println(socket.getInetAddress()+" 에서 접속을 종료");
+			}else{
+				System.out.println(userId+" 접속 종료");
+			}
+			try{
+				this.socket.close();
+			}catch(IOException ie){
+				System.out.println(ie.getMessage());
+			}
 		}
 	}
 	public void ToClient(Socket socket,String msg){
@@ -78,6 +88,19 @@ class Receiver extends Thread{
 			writer.flush();
 		}catch(Exception e){
 			System.out.println("ToClient Method");
+		}
+	}
+	public void ToOtherClient(String msg){
+		try{
+			for(Socket socket : sVector){
+				if(this.socket != socket){
+					PrintWriter w = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+					w.println(sVector);
+					w.flush();
+				}
+			}
+		}catch(Exception e){
+			System.out.println("ToOtherClient");
 		}
 	}
 	public void ToAll(String msg){
@@ -107,7 +130,7 @@ public class Server {
 			while(true){
 				socket = server.accept();
 				sVector.add(socket);
-				System.out.println(socket.getInetAddress()+":"+socket.getPort()+" 입장");
+				System.out.println(socket.getInetAddress()+":"+socket.getPort()+" 에서 접속");
 				
 				Receiver receiver = new Receiver(socket,sVector);
 				receiver.start();
