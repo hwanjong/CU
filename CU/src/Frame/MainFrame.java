@@ -9,13 +9,14 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Main.Client;
 import Main.Constants;
+import Main.Room;
 
 public class MainFrame extends JFrame{
 
@@ -26,10 +27,10 @@ public class MainFrame extends JFrame{
 	
 	JoinPanel joinPanel;
 	LoginPanel loginPanel; 
+	WaitRoomPanel waitRoomPanel;
 	
-	int choice;
-	Scanner scan = new Scanner(System.in);
-	
+	Vector<Room> roomList;
+	int rCount;
 	
 	public MainFrame(Client client){
 
@@ -37,6 +38,7 @@ public class MainFrame extends JFrame{
 		
 		setClient(client);
 		card = new CardLayout();
+		roomList = new Vector<Room>();
 		
 		pane=getContentPane();
 		pane.setLayout(card);
@@ -45,12 +47,15 @@ public class MainFrame extends JFrame{
 		//Panel생성
 		joinPanel = new JoinPanel(client);
 		loginPanel = new LoginPanel(client); 
+		waitRoomPanel = new WaitRoomPanel(client);
+		
 
 		this.init();
 		
 		
 		pane.add(joinPanel, Constants.EPanel.가입.getName());
 		pane.add(loginPanel,Constants.EPanel.로그인.getName());
+		pane.add(waitRoomPanel,Constants.EPanel.대기방.getName());
 		
 		pack();
 		setVisible(true);
@@ -58,6 +63,8 @@ public class MainFrame extends JFrame{
 		setLocation(450, 250);
 		setResizable(false);
 		
+		//시작패널
+		setSize(350, 300);
 		card.show(this.getContentPane(),Constants.EPanel.로그인.getName());
 		
 		
@@ -72,6 +79,7 @@ public class MainFrame extends JFrame{
 		//계속추가
 		loginPanel.init(this);
 		joinPanel.init(this);
+		waitRoomPanel.init(this);
 	
 	}
 	
@@ -89,6 +97,12 @@ public class MainFrame extends JFrame{
 			card.show(this.getContentPane(), Constants.EPanel.로그인.getName());
 //			bounds조정하려면 추가
 			this.setSize(400, 300);
+			break;
+			
+		case "waitRoom" :
+			card.show(this.getContentPane(), Constants.EPanel.대기방.getName());
+			waitRoomPanel.addData();
+			this.setSize(700, 500);
 			break;
 		
 		default:
