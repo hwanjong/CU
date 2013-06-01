@@ -1,4 +1,4 @@
-package MainFrame;
+package GamePanel;
 
 public class ChatPanel {
 
