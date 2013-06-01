@@ -48,12 +48,14 @@ class Receiver extends Thread{
 					}else{
 						ToClient(socket,"Login");
 						rVector = dbAdmin.GetRoomList();
-//						for(Room room : rVector){
-//							Vector<String> pUser = room.getPartUser();
-//							String msg = room.getrNo()+","+room.getrMaster()+","+room.getNumUser()+","+room.getPlay()+
-//									pUser;
-//							ToClient(socket,msg);
-//						}
+						for(Room room : rVector){
+							Vector<String> pUser = room.getPartUser();
+							String msg = room.getrNo()+","+room.getrMaster()+","+room.getNumUser()+","+room.getPlay();
+							for(String m : pUser){
+								msg + "_"+pUser;
+							}
+							ToClient(socket,msg);
+						}
 					}
 				}
 				else if(select==3){
