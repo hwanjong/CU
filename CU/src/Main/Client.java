@@ -25,14 +25,15 @@ public class Client {
 
 	public Client() {
 		try {
-			socket = new Socket("192.168.39.201", 10005);
+			socket = new Socket("192.168.39.22", 10005);//진성
+//			socket = new Socket("202.30.111.135", 10001);//민철
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			writer.println("hi");
-			writer.flush();
-			massage = reader.readLine();
-			System.out.println(massage);
+//			writer.println("hi");
+//			writer.flush();
+//			massage = reader.readLine();
+//			System.out.println(massage);
 
 		} catch (Exception e) {
 		}
@@ -40,13 +41,24 @@ public class Client {
 	
 	public void sendMassage(String massage){
 		try{
-		writer.println(massage);
-		writer.flush();
-		massage = reader.readLine();
-		System.out.println(massage);
+			writer.println(massage);
+			writer.flush();
+
 		}catch(Exception e){
-			System.out.println("메시지가 넘어오지않음");
+			System.out.println("메시지를 보낼수없음");
 		
 		}
+	}
+	public String receiveMassage(){
+		try {
+			massage = reader.readLine();
+			System.out.println(massage);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("메시지를 보낼수없음");
+		}
+		return massage;
+		
 	}
 }
