@@ -1,18 +1,14 @@
-
+package Main;
 import java.util.Vector;
 
 public class Room {
 	private int rNo;
 	private String rMaster;
 	private int numUser;
-	private Vector<String> partUser = new Vector<String>();
 	private String play;
 	private String level;
-	Game game = new Game(this);
-	public void gameStart(){
-		game.start();
-		play = "O";
-	}
+	private Vector<String> partUser = new Vector<String>();
+	
 	public int getrNo() {
 		return rNo;
 	}
@@ -43,10 +39,16 @@ public class Room {
 	public void setNumUser(int numUser) {
 		this.numUser = numUser;
 	}
-	public String getLevel(){
+	public void addPartUser(String userId){
+		this.partUser.add(userId);
+	}
+	public String getPartUser(int index){
+		return this.partUser.get(index);
+	}
+	public String getLevel() {
 		return level;
 	}
-	public void setLevel(String level){
+	public void setLevel(String level) {
 		this.level = level;
 	}
 }

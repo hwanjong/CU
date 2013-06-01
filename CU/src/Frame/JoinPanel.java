@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import Main.Client;
 import Main.Constants;
+import Main.Room;
 
 public class JoinPanel extends JPanel implements ActionListener{
 
@@ -121,7 +122,8 @@ public class JoinPanel extends JPanel implements ActionListener{
 				//send & receive
 				client.sendMassage(msg);
 				massage=client.receiveMassage();
-
+				
+				
 				//성공했을시
 				if(massage.equals("Success")){
 					JOptionPane.showMessageDialog(null, "회원가입 완료!");
@@ -131,14 +133,13 @@ public class JoinPanel extends JPanel implements ActionListener{
 					JOptionPane.showMessageDialog(null, "중복된 ID가 있습니다.");
 					return;
 				}
-
 			}
-
 		}
 	}
 
+	
 	public void init(MainFrame frame){
 		this.mainFrame = frame;
 	}
-
+	
 }

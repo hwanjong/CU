@@ -6,6 +6,7 @@ public class User {
 	private String pwd;
 	private int roomNo;
 	private boolean Permit;
+	private int currentScore;
 	
 	public User(String ID){
 		setID(ID);

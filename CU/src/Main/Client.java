@@ -13,11 +13,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-/**
- * 
- * @author Administrator Æò°¡4¿ë client
- */
-public class Client {
+public class Client extends Thread {
 	private Socket socket; // ¼ÒÄÏ
 	private PrintWriter writer;
 	private BufferedReader reader;
@@ -26,15 +22,9 @@ public class Client {
 	public Client() {
 		try {
 			socket = new Socket("192.168.39.22", 10005);//Áø¼º
-//			socket = new Socket("202.30.111.135", 10001);//¹ÎÃ¶
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//			writer.println("hi");
-//			writer.flush();
-//			massage = reader.readLine();
-//			System.out.println(massage);
-
 		} catch (Exception e) {
 		}
 	}

@@ -2,6 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Vector;
 
+
 class Receiver extends Thread{
 	Socket socket;
 	Server server;
