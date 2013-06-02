@@ -88,7 +88,7 @@ public class LoginPanel extends JPanel implements ActionListener{
 			msg=client.receiveMassage();
 			if(msg.equals("Login")){
 				client.sendMassage("4: ");
-				mainFrame.rCount = this.insertRoom();
+				mainFrame.rCount = mainFrame.insertRoom();
 				mainFrame.selectPanel(Constants.EPanel.대기방.getName());
 			}else{
 				JOptionPane.showMessageDialog(null, "ID나 PWD를 확인하세요");
@@ -109,36 +109,5 @@ public class LoginPanel extends JPanel implements ActionListener{
 		this.mainFrame = frame;
 	}
 	
-	public int insertRoom(){
-		int count=0;
-		while(true){
-			String massage=client.receiveMassage();
-			if(massage.equals("End"))
-				break;
-			String[] splitMassage=massage.split(",");
-			int rNo = Integer.parseInt(splitMassage[0]);
-			String rMaster = splitMassage[1];
-			int numUser = Integer.parseInt(splitMassage[2]);
-			String play = splitMassage[3];
-			String level = splitMassage[4];
-			splitMassage = splitMassage[5].split("_");
-			
-			Room room = new Room();
-			room.setrNo(rNo);
-			room.setrMaster(rMaster);
-			room.setNumUser(numUser);
-			room.setPlay(play);
-			room.setLevel(level);
-			
-			for(String userid : splitMassage){
-				room.addPartUser(userid);
-//				참여userid들어오는지 확인
-//				System.out.println(userid);
-			}
-			mainFrame.roomList.add(room);
-			count++;
-		}
-		return count;
-	}
 
 }

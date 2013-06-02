@@ -1,7 +1,6 @@
 1:id,pwd,nname 회원가입
 2:login, id, pwd 로그인
 3.chat,massage 챗팅
-4.rNo,rMaster,numUser,play,level,Userid_userid_
-
-
-
+4.rNo,rMaster,numUser,play,level,Userid_userid_ 게임방리스트
+5.5:level 방생성
+6.6:rNo

@@ -64,7 +64,7 @@ public class MainFrame extends JFrame{
 		setResizable(false);
 		
 		//시작패널
-		setSize(350, 300);
+		setSize(330, 230);
 		card.show(this.getContentPane(),Constants.EPanel.로그인.getName());
 		
 		
@@ -90,18 +90,19 @@ public class MainFrame extends JFrame{
 			
 			card.show(this.getContentPane(), Constants.EPanel.가입.getName());
 //			bounds조정하려면 추가
-			this.setSize(400, 300);
+			this.setSize(330, 230);
 			break;
 			
 		case "login" :
 			card.show(this.getContentPane(), Constants.EPanel.로그인.getName());
 //			bounds조정하려면 추가
-			this.setSize(400, 300);
+			this.setSize(300, 200);
 			break;
 			
 		case "waitRoom" :
 			card.show(this.getContentPane(), Constants.EPanel.대기방.getName());
 			waitRoomPanel.addData();
+			this.setLocation(230, 100);
 			this.setSize(700, 500);
 			break;
 		
@@ -110,6 +111,45 @@ public class MainFrame extends JFrame{
 			break;
 		}
 		
+	}
+	public int insertRoom(){
+		int count=0;
+		while(true){
+			String massage=client.receiveMassage();
+			if(massage.equals("End"))
+				break;
+			String[] splitMassage=massage.split(",");
+			int rNo = Integer.parseInt(splitMassage[0]);
+			String rMaster = splitMassage[1];
+			int numUser = Integer.parseInt(splitMassage[2]);
+			String play = splitMassage[3];
+			String level = splitMassage[4];
+			splitMassage = splitMassage[5].split("_");
+			
+			Room room = new Room();
+			room.setrNo(rNo);
+			room.setrMaster(rMaster);
+			room.setNumUser(numUser);
+			room.setPlay(play);
+			room.setLevel(level);
+			
+			for(String userid : splitMassage){
+				room.addPartUser(userid);
+//				참여userid들어오는지 확인
+//				System.out.println(userid);
+			}
+			this.roomList.add(room);
+			count++;
+		}
+		return count;
+	}
+
+	public Vector<Room> getRoomList() {
+		return roomList;
+	}
+
+	public void setRoomList(Vector<Room> roomList) {
+		this.roomList = roomList;
 	}
 
 }
