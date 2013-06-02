@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 
 import Main.Client;
 import Main.Constants;
-import Main.Room;
+import Model.Room;
 
 public class LoginPanel extends JPanel implements ActionListener{
 

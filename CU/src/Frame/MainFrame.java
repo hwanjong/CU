@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.io.InputStreamReader;
 import java.util.Vector;
@@ -16,7 +17,8 @@ import javax.swing.JPanel;
 
 import Main.Client;
 import Main.Constants;
-import Main.Room;
+import Model.Room;
+import Model.User;
 
 public class MainFrame extends JFrame{
 
@@ -28,8 +30,10 @@ public class MainFrame extends JFrame{
 	JoinPanel joinPanel;
 	LoginPanel loginPanel; 
 	WaitRoomPanel waitRoomPanel;
+	GamePanel gamePanel;
 	
 	Vector<Room> roomList;
+	Vector<User> userList;
 	int rCount;
 	
 	public MainFrame(Client client){
@@ -39,6 +43,7 @@ public class MainFrame extends JFrame{
 		setClient(client);
 		card = new CardLayout();
 		roomList = new Vector<Room>();
+		userList = new Vector<User>();
 		
 		pane=getContentPane();
 		pane.setLayout(card);
@@ -48,7 +53,7 @@ public class MainFrame extends JFrame{
 		joinPanel = new JoinPanel(client);
 		loginPanel = new LoginPanel(client); 
 		waitRoomPanel = new WaitRoomPanel(client);
-		
+		gamePanel = new GamePanel(client);
 
 		this.init();
 		
@@ -56,6 +61,7 @@ public class MainFrame extends JFrame{
 		pane.add(joinPanel, Constants.EPanel.가입.getName());
 		pane.add(loginPanel,Constants.EPanel.로그인.getName());
 		pane.add(waitRoomPanel,Constants.EPanel.대기방.getName());
+		pane.add(gamePanel,Constants.EPanel.게임방.getName());
 		
 		pack();
 		setVisible(true);
@@ -80,6 +86,8 @@ public class MainFrame extends JFrame{
 		loginPanel.init(this);
 		joinPanel.init(this);
 		waitRoomPanel.init(this);
+		gamePanel.init(this);
+		
 	
 	}
 	
@@ -105,14 +113,23 @@ public class MainFrame extends JFrame{
 			this.setLocation(230, 100);
 			this.setSize(700, 500);
 			break;
-		
+		case "game" :
+			card.show(this.getContentPane(), Constants.EPanel.게임방.getName());
+			//User정보도 추가해야할듯여기서
+			this.setBounds(50, 50, 1000, 600);
+			break;
 		default:
 			System.out.println("패널이동실패");
 			break;
 		}
 		
 	}
+	
+	
 	public int insertRoom(){
+		/*룸리스트를 룸벡터에추가하며 
+		*방의개수를 반환
+		해주는 메소드*/
 		int count=0;
 		while(true){
 			String massage=client.receiveMassage();
@@ -143,6 +160,32 @@ public class MainFrame extends JFrame{
 		}
 		return count;
 	}
+	
+	public int insertUsers(){
+		int count=0;
+		while(true){
+			String massage=client.receiveMassage();
+			if(massage.equals("End"))
+				break;
+			String[] splitMassage=massage.split(",");
+			
+			String nicName = splitMassage[0];
+			int currentScore = Integer.parseInt(splitMassage[1]);
+			int totalScore = Integer.parseInt(splitMassage[2]);
+			String grade = splitMassage[3];
+			
+			User user = new User();
+			user.setNicName(nicName);
+			user.setCurrentScore(currentScore);
+			user.setTotalScore(totalScore);
+			user.setGrade(grade);
+			
+			this.userList.add(user);
+			count++;
+		}
+		return count;
+		
+	}
 
 	public Vector<Room> getRoomList() {
 		return roomList;
@@ -150,6 +193,14 @@ public class MainFrame extends JFrame{
 
 	public void setRoomList(Vector<Room> roomList) {
 		this.roomList = roomList;
+	}
+
+	public Vector<User> getRoomUserList() {
+		return userList;
+	}
+
+	public void setRoomUserList(Vector<User> roomUserList) {
+		this.userList = roomUserList;
 	}
 
 }

@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Main.Client;
 import Main.Constants;
-import Main.Room;
+import Model.Room;
 
 public class WaitRoomPanel extends JPanel implements ActionListener{
 
@@ -53,8 +53,12 @@ public class WaitRoomPanel extends JPanel implements ActionListener{
 		this.setLayout(new BorderLayout());
 		this.setLocation(200, 200);
 		this.setSize(800, 400);
-		tableModel = new DefaultTableModel(rowData, calName);
+		tableModel = new DefaultTableModel(calName, 0){	//셀수정못하도록
+		    public boolean isCellEditable(int row, int col) {
+		     return false;
+		    }};
 		table = new JTable(tableModel);
+		
 		
 		//selectRow리스너등록
 		selectionModel = table.getSelectionModel();  
@@ -105,7 +109,7 @@ public class WaitRoomPanel extends JPanel implements ActionListener{
 		}
 		add("East",userPanel);
 		
-		//액션리스너달기
+		//버튼에 액션리스너 assign
 		create.addActionListener(this);
 		refresh.addActionListener(this);
 		join.addActionListener(this);
@@ -163,19 +167,42 @@ public class WaitRoomPanel extends JPanel implements ActionListener{
 					"난이도 설정", JOptionPane.QUESTION_MESSAGE, null, selections, "두번째값");
 			client.sendMassage("5:"+level+",");
 			massage = client.receiveMassage();
-			if(massage.equals("Create")){
-//				cardchange추가하기
-				
+			
+			String[] reMassage = massage.split(":");
+			
+		
+			//정보가넘어옴
+			if(reMassage[0].equals("Create")){
+//				정보요청
+				client.sendMassage("7:"+reMassage[1]+",");
+//				정보를 모델에저장
+				mainFrame.insertUsers();
+				mainFrame.selectPanel(Constants.EPanel.게임방.getName());
+			}else{
+				JOptionPane.showMessageDialog(null, "방이생성되지못하였습니다.");
 			}
+				
 			return;
 		}
+		
 		if(eventSource == join){
 			int vectorIndex = this.getSelectRow();
 			int rNo= mainFrame.getRoomList().get(vectorIndex).getrNo();
 			client.sendMassage("6:"+rNo+",");
 			massage = client.receiveMassage();
 			
+			if(massage.equals("Fail")){
+				JOptionPane.showMessageDialog(null, "입장불가");
+				return;
+			}else if(massage.equals("Enter")){
+				client.sendMassage("7: ");
+				mainFrame.insertUsers();
+				mainFrame.selectPanel(Constants.EPanel.게임방.getName());
+			}else{
+				JOptionPane.showMessageDialog(null, "방이생성되지못하였습니다.");
+			}
 		}
+		
 		if(eventSource == refresh){
 			mainFrame.roomList.clear();
 //			잠시 리스너를 해제한다.

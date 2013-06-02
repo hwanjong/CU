@@ -1,4 +1,4 @@
-package Main;
+package Model;
 import java.util.Vector;
 
 public class Room {
