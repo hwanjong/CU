@@ -61,13 +61,12 @@ public class ServerDbAdministrator {
 		}
 	}//CheckLogin
 	public void CreateRoom(String id,String level){
-		sql = "insert into room (rMaster,current_users,play,level) values(?,?,'O',?)";
+		sql = "insert into room (room_master,current_users,play,level) values(?,1,'O',?)";
 		try{												//방을 만들면 방의 번호는 자동으로 증가
 			pstmt = conn.prepareStatement(sql);				//방장의 아이디를 설정하고 참여중인 유저의 수를 1로 설정
 			pstmt.setString(1, id);
-			pstmt.setInt(2, 1);
-			pstmt.setString(3, level);
-			pstmt.executeQuery();
+			pstmt.setString(2, level);
+			pstmt.executeUpdate();
 		}catch(Exception e){
 			System.out.println("Fail");
 		}
@@ -140,5 +139,78 @@ public class ServerDbAdministrator {
 		}catch(Exception e){
 			System.out.println("SetPlay Error");
 		}
+	}
+	public int getRnoFromUser(String userId){
+		int rNo;
+		try{
+			sql = "select room_num from participate where id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs = pstmt.executeQuery();
+			rs.next();
+			rNo = rs.getInt("room_num");
+			return rNo;
+		}catch(Exception e){
+			System.out.println("Error From getRnoFromUser");
+			return 0;
+		}
+	}
+	public int getRnoFromMaster(String rMaster){
+		int rNo;
+		try{
+			sql = "select room_num from room where room_master = ?";
+			pstmt = conn.prepareStatement(sql);
+			System.out.println(rMaster);
+			pstmt.setString(1, rMaster);
+			rs = pstmt.executeQuery();
+			rs.next();
+			rNo = rs.getInt("room_num");
+			return rNo;
+		}catch(Exception e){
+			System.out.println("Error From getRno");
+			return 0;
+		}
+	}
+	public void PartRoom(String id,int rNo){	//게임방과 유저 의 관계를 나타내는 테이블에 데이터 삽입
+		try{
+			sql = "insert into participate (id,room_num) values (?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setInt(2, rNo);
+			pstmt.executeUpdate();
+		}catch(Exception e){
+			System.out.println("Error From insertPartRoom");
+		}
+	}
+	public void initRoom(){
+		try{
+			sql = "delete from participate";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			
+			sql = "delete from room";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			
+		}catch(Exception e){
+			System.out.println("Error From Room Initialization");
+		}
+	}
+	
+	public Vector<String> GetWord(String level){
+		Vector<String> word = new Vector<String>();
+		try{
+			sql = "select word from word where level = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, level);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				word.add(rs.getString("word"));
+			}
+		}catch(Exception e){
+			System.out.println("Fail word from DataBase");
+		}
+		return word;
 	}
 }//Class

@@ -8,11 +8,6 @@ public class Room {
 	private Vector<String> partUser = new Vector<String>();
 	private String play;
 	private String level;
-	Game game = new Game(this);
-	public void gameStart(){
-		game.start();
-		play = "O";
-	}
 	public int getrNo() {
 		return rNo;
 	}
@@ -42,6 +37,9 @@ public class Room {
 	}
 	public void setNumUser(int numUser) {
 		this.numUser = numUser;
+	}
+	public void addNumUser(){
+		this.numUser = numUser+1;
 	}
 	public String getLevel(){
 		return level;
