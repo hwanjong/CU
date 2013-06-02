@@ -90,13 +90,13 @@ public class MainFrame extends JFrame{
 			
 			card.show(this.getContentPane(), Constants.EPanel.가입.getName());
 //			bounds조정하려면 추가
-			this.setSize(330, 230);
+			this.setSize(400, 300);
 			break;
 			
 		case "login" :
 			card.show(this.getContentPane(), Constants.EPanel.로그인.getName());
 //			bounds조정하려면 추가
-			this.setSize(300, 200);
+			this.setSize(330, 230);
 			break;
 			
 		case "waitRoom" :

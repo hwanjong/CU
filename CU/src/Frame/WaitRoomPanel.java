@@ -190,6 +190,7 @@ public class WaitRoomPanel extends JPanel implements ActionListener{
 			mainFrame.rCount = mainFrame.insertRoom();
 			
 			mainFrame.selectPanel(Constants.EPanel.대기방.getName());
+//			리스너를다시달아준다
 			selectionModel.addListSelectionListener(rowListener);
 		}
 		
