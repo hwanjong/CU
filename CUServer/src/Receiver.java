@@ -7,6 +7,7 @@ class Receiver extends Thread{
 	Socket socket;
 	Server server;
 	Vector<Room> roomVector = new Vector<Room>();
+	Vector<User> uVector = new Vector<User>();
 	HashMap<Integer, Vector> rMap = new HashMap<Integer, Vector>();
 	HashMap<Integer, Game> gMap = new HashMap<Integer, Game>();
 	BufferedReader reader;
@@ -19,8 +20,6 @@ class Receiver extends Thread{
 		dbAdmin = new ServerDbAdministrator();
 		this.socket = socket;
 		this.server = server;
-		Game game = new Game("Hard");
-		gMap.put(1, game);
 	}//생성자
 	public void run(){
 		try{
@@ -88,19 +87,42 @@ class Receiver extends Thread{
 					int rNo = dbAdmin.getRnoFromMaster(userId);
 					dbAdmin.PartRoom(userId,rNo);
 					AddRoom(rNo,level);
-					ToClient(socket,"Create");
+					ToClient(socket,"Create:"+rNo);
 				}
 				
 				else if(select==6){			//게임방 입장
 					int rNo = Integer.parseInt(contents.split(",")[0]);
 					EnterRoom(rNo);
-					dbAdmin.PartRoom(userId, rNo);
-					ToClient(socket,"Enter");
+					String id = dbAdmin.PartRoom(userId, rNo);
+					if(id.equals(null)){
+						ToClient(socket,"False");
+					}else {
+						ToClient(socket,"Enter");
+					}
 				}
 				
-				else if(select==7){			//게임시작
+				else if(select==7){			//게임방의 유저 정보 요청
 					int rNo = Integer.parseInt(contents.split(",")[0]);
-					gMap.get(rNo).start();
+					System.out.println(rNo+"Receiver");
+					uVector = dbAdmin.GetUserFromRno(rNo);
+					for(User user: uVector){
+						String msg = user.getNickName()+","+user.getcScore()+","+
+									user.gettScore()+","+user.getGrade();
+						ToClient(socket,msg);
+						System.out.println(msg);
+					}//for
+					ToClient(socket,"End");
+//					int rNo = Integer.parseInt(contents.split(",")[0]);
+//					gMap.get(rNo).start();
+				}
+				else if(select==8){			//Draw
+					int rNo = dbAdmin.getRnoFromUser(userId);
+					int x;
+					int y;
+					x = Integer.parseInt(contents.split("_")[0]);
+					y = Integer.parseInt(contents.split("_")[1]);
+					System.out.println("From Client Draw : "+x+"_"+y);
+					ToRoom(rNo,contents);
 				}
 			}//while
 		}catch(Exception e){			//접속이 종료될때
@@ -108,6 +130,7 @@ class Receiver extends Thread{
 				System.out.println(socket.getInetAddress()+" 에서 접속을 종료");
 			}else{						//로그인 했을 경우 접속을 끊은 아이디를 확인
 				System.out.println(userId+" 접속 종료");
+				dbAdmin.DeleteRoom(userId);
 			}
 			try{
 				this.reader.close();
@@ -142,16 +165,15 @@ class Receiver extends Thread{
 			System.out.println("Error From ToRoom");
 		}
 	}//ToRoom
-	
 	public void AddRoom(int rNo,String level){
-//		Vector<Receiver> rv = new Vector<Receiver>();
 		rMap.put(rNo, server.rVector);
-		Game game = new Game(level);
+		Game game = new Game(level,this,rNo);
 		gMap.put(rNo, game);
 	}//AddRoom
 	
 	public void EnterRoom(int rNo){
 		Vector<Receiver> rv = rMap.get(rNo);
 		rMap.put(rNo, rv);
+		dbAdmin.EnterRoom(userId, rNo);
 	}//EnterRoom
-}//Receiver
+}//Class

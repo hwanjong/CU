@@ -21,7 +21,7 @@ public class Client extends Thread {
 
 	public Client() {
 		try {
-			socket = new Socket("192.168.39.22", 10005);//진성
+			socket = new Socket("localhost", 10005);//진성
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

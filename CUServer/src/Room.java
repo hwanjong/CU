@@ -1,7 +1,7 @@
 
 import java.util.Vector;
 
-public class Room {
+public class Room {		//방의 정보를 저장
 	private int rNo;
 	private String rMaster;
 	private int numUser;
